@@ -1,0 +1,16 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <div class="row mt-5 justify-content-center px-2">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+            <div class="error-card">
+                <div class="error-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h3 class="fw-bold text-white mb-2">Oops! Something went wrong</h3>
+                <p class="text-secondary mb-3"><%= message %></p>
+                <a href="/listings" class="btn btn-search">
+                    <i class="fa-solid fa-arrow-left me-2"></i>Back to Listings
+                </a>
+            </div>
+        </div>
+    </div>

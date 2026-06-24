@@ -1,0 +1,63 @@
+<% layout("/layouts/boilerplate.ejs") %>
+    <div class="row mt-4 px-2 pb-5">
+        <div class="col-12 col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+            <h3 class="fw-bold text-white mb-4"><i class="fa-solid fa-calendar-check me-2"></i>My Bookings</h3>
+
+            <% if(bookings.length === 0) { %>
+                <div class="empty-state">
+                    <i class="fa-regular fa-calendar-xmark"></i>
+                    <h5>No bookings yet</h5>
+                    <p class="text-secondary">Start exploring properties and make your first reservation!</p>
+                    <a href="/listings" class="btn btn-search mt-2">Explore Properties</a>
+                </div>
+            <% } else { %>
+                <% for(let booking of bookings) { %>
+                    <div class="booking-list-card mb-3">
+                        <div class="row g-0 align-items-center">
+                            <div class="col-12 col-sm-3">
+                                <% if(booking.listing && booking.listing.image) { %>
+                                    <img src="<%= booking.listing.image.url %>" class="booking-list-img" alt="listing">
+                                <% } else { %>
+                                    <div class="booking-list-img-placeholder">
+                                        <i class="fa-solid fa-image"></i>
+                                    </div>
+                                <% } %>
+                            </div>
+                            <div class="col-12 col-sm-6 p-3">
+                                <h5 class="mb-1 text-white fw-bold">
+                                    <% if(booking.listing) { %>
+                                        <a href="/listings/<%= booking.listing._id %>" class="text-white text-decoration-none"><%= booking.listing.title %></a>
+                                    <% } else { %>
+                                        <span class="text-secondary">[Listing Deleted]</span>
+                                    <% } %>
+                                </h5>
+                                <p class="text-secondary mb-1 small">
+                                    <i class="fa-regular fa-calendar me-1"></i>
+                                    <%= new Date(booking.checkIn).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                    &mdash;
+                                    <%= new Date(booking.checkOut).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                                </p>
+                                <p class="text-secondary mb-0 small">
+                                    <i class="fa-solid fa-users me-1"></i> <%= booking.guests %> guest<%= booking.guests > 1 ? 's' : '' %>
+                                    &nbsp;&bull;&nbsp;
+                                    &#8377; <%= booking.totalPrice.toLocaleString('en-IN') %> total
+                                </p>
+                            </div>
+                            <div class="col-12 col-sm-3 p-3 text-sm-end">
+                                <% if(booking.status === 'confirmed') { %>
+                                    <span class="badge bg-success mb-2">Confirmed</span><br>
+                                    <form method="POST" action="/bookings/<%= booking._id %>/cancel" class="d-inline">
+                                        <button class="btn btn-sm btn-outline-danger">Cancel</button>
+                                    </form>
+                                <% } else if(booking.status === 'cancelled') { %>
+                                    <span class="badge bg-danger">Cancelled</span>
+                                <% } else { %>
+                                    <span class="badge bg-info">Completed</span>
+                                <% } %>
+                            </div>
+                        </div>
+                    </div>
+                <% } %>
+            <% } %>
+        </div>
+    </div>

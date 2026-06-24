@@ -1,0 +1,223 @@
+<% layout("/layouts/boilerplate.ejs") %>
+    <div class="row mt-4 px-2 pb-5">
+
+        <div class="col-12 col-md-10 offset-md-1 col-lg-10 offset-lg-1 mb-3">
+            <h3 class="fw-bold text-white" id="listingTitle">
+                <%= listing.title %>
+            </h3>
+        </div>
+
+        <!-- Left details column -->
+        <div class="col-12 col-md-7 col-lg-6 offset-lg-1 mb-4">
+            <div class="card show-card" id="showCard">
+                <img src="<%=listing.image.url%>" class="card-img-top show-image" alt="<%= listing.title %>"
+                    id="listingImage">
+                <div class="card-body mt-3">
+                    <p class="card-text"> Owned By: <i>
+                            <%= listing.owner.username %>
+                        </i></p>
+                    <p class="card-text">
+                        <%= listing.description %>
+                    </p>
+                    <p class="card-text"> &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
+                    </p>
+                    <p class="card-text">
+                        <i class="fa-solid fa-location-dot me-1"></i>
+                        <%= listing.location %>, <%= listing.country %>
+                    </p>
+                </div>
+            </div>
+
+            <% if( currUser && currUser._id.equals(listing.owner._id) ) { %>
+                <div class="btns mb-3 d-flex flex-wrap gap-2" id="ownerActions">
+                    <a href="/listings/<%=listing._id%>/edit" class="btn btn-dark edit-btn" id="editListingBtn">Edit</a>
+                    <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE" id="deleteListingForm">
+                        <button class="btn btn-dark" id="deleteListingBtn">Delete</button>
+                    </form>
+                </div>
+            <% } %>
+
+                    <div>
+                        <% if (currUser) { %>
+                            <hr>
+                            <h4 class="text-white">Leave a Review</h4>
+                            <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate
+                                class="needs-validation" id="reviewForm">
+
+                                <div class="mb-3 mt-3">
+                                    <label for="rating" class="form-label">Rating</label>
+                                    <fieldset class="starability-slot" id="ratingFieldset">
+                                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]"
+                                            value="1" checked aria-label="No rating." />
+                                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                                        <label for="first-rate1" title="Terrible">1 star</label>
+                                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                        <label for="first-rate2" title="Not good">2 stars</label>
+                                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                        <label for="first-rate3" title="Average">3 stars</label>
+                                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                        <label for="first-rate4" title="Very good">4 stars</label>
+                                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                        <label for="first-rate5" title="Amazing">5 stars</label>
+                                    </fieldset>
+                                </div>
+
+                                <div class="mb-3 mt-3">
+                                    <label for="comment" class="form-label">Comments </label>
+                                    <textarea name="review[comment]" id="comment" cols="30" rows="5"
+                                        class="form-control" placeholder="Share your experience..." required></textarea>
+                                    <div class="invalid-feedback">Please add a comment for your review</div>
+                                </div>
+
+                                <button class="btn btn-outline-dark" id="submitReviewBtn">Submit</button>
+                            </form>
+                        <% } %>
+
+
+                                <% if(listing.reviews.length> 0) { %>
+                                    <hr>
+                                    <div class="row" id="reviewsSection">
+                                        <h4 class="text-white mt-2">All Reviews</h4>
+                                        <% for (let review of listing.reviews) { %>
+                                            <div class="card col-12 col-sm-5 ms-sm-3 mb-3 review-card">
+                                                <div class="card-body">
+                                                    <h5 style="color: white;" class="card-title">
+                                                        @<%= review.author.username %>
+                                                    </h5>
+                                                    <p class="starability-result" data-rating="<%= review.rating %>">
+                                                    </p>
+                                                    <p class="card-text">
+                                                        <%= review.comment %>
+                                                    </p>
+                                                </div>
+
+                                                <% if(currUser && currUser._id.equals(review.author._id)) { %>
+                                                    <form class="mb-3 ms-3" method="POST"
+                                                        action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                                                        <button class="btn btn-sm btn-dark">Delete Review</button>
+                                                    </form>
+                                                <% } %>
+                                            </div>
+                                        <% } %>
+                                    </div>
+                                <% } %>
+                    </div>
+
+                    <hr>
+                    <div class="mb-3">
+                        <h3 class="text-white">Where you'll be</h3>
+                        <div id="map"></div>
+                    </div>
+        </div>
+
+        <!-- Right sticky booking sidebar column -->
+        <div class="col-12 col-md-5 col-lg-4 mb-4">
+            <div class="booking-card" id="bookingCard">
+                <h5>&#8377; <%= listing.price.toLocaleString("en-IN") %> <span class="text-muted fs-6"
+                            style="font-weight: 400;">/ night</span></h5>
+                <hr>
+                <% if (!currUser) { %>
+                    <div class="alert alert-warning text-center" role="alert" id="loginAlert">
+                        Please <a href="/login" class="alert-link">Log in</a> to book this property.
+                    </div>
+                <% } else if (currUser._id.equals(listing.owner._id)) { %>
+                    <div class="alert alert-info text-center" role="alert" id="ownerAlert">
+                        You own this listing property.
+                    </div>
+                <% } else { %>
+                    <form action="/bookings/<%= listing._id %>" method="POST" class="needs-validation"
+                        novalidate id="bookingForm">
+                        <div class="mb-3">
+                            <label for="checkIn" class="form-label">Check-in Date</label>
+                            <input type="date" id="checkIn" name="booking[checkIn]" class="form-control"
+                                required>
+                            <div class="invalid-feedback">Select check-in date</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="checkOut" class="form-label">Check-out Date</label>
+                            <input type="date" id="checkOut" name="booking[checkOut]" class="form-control"
+                                required>
+                            <div class="invalid-feedback">Select check-out date</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="guests" class="form-label">Number of Guests</label>
+                            <input type="number" id="guests" name="booking[guests]" min="1" max="10" value="1"
+                                class="form-control" required>
+                            <div class="invalid-feedback">Enter number of guests</div>
+                        </div>
+
+                        <div class="booking-price-calc mb-3 d-none" id="priceCalcSection">
+                            <div class="booking-price-row">
+                                <span id="pricePerNightText">&#8377; <%= listing.price %> x 0 nights</span>
+                                <span id="basePriceText">&#8377; 0</span>
+                            </div>
+                            <div class="booking-price-row text-success">
+                                <span>Service Fee (Included)</span>
+                                <span>&#8377; 0</span>
+                            </div>
+                            <div class="booking-total-row">
+                                <span>Total</span>
+                                <span id="totalPriceText">&#8377; 0</span>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-book" id="reserveBtn">Reserve Property</button>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const mapToken = {
+            listing: {
+                location: "<%= listing.location %>",
+                country: "<%= listing.country %>",
+                title: "<%- listing.title %>"
+            }
+        };
+
+        const listingPrice = <%= listing.price %>;
+
+        // Dynamic price calculator script
+        const checkInInput = document.getElementById("checkIn");
+        const checkOutInput = document.getElementById("checkOut");
+        const priceCalcSection = document.getElementById("priceCalcSection");
+        const pricePerNightText = document.getElementById("pricePerNightText");
+        const basePriceText = document.getElementById("basePriceText");
+        const totalPriceText = document.getElementById("totalPriceText");
+
+        function updatePrice() {
+            if (!checkInInput || !checkOutInput) return;
+            const checkInDate = new Date(checkInInput.value);
+            const checkOutDate = new Date(checkOutInput.value);
+
+            if (checkInInput.value && checkOutInput.value && checkOutDate > checkInDate) {
+                const diffTime = Math.abs(checkOutDate - checkInDate);
+                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+                const totalPrice = diffDays * listingPrice;
+
+                pricePerNightText.innerText = `\u20B9 ${listingPrice.toLocaleString('en-IN')} x ${diffDays} night${diffDays > 1 ? 's' : ''}`;
+                basePriceText.innerText = `\u20B9 ${totalPrice.toLocaleString('en-IN')}`;
+                totalPriceText.innerText = `\u20B9 ${totalPrice.toLocaleString('en-IN')}`;
+
+                priceCalcSection.classList.remove("d-none");
+            } else {
+                if (priceCalcSection) priceCalcSection.classList.add("d-none");
+            }
+        }
+
+        if (checkInInput && checkOutInput) {
+            // Set minimum dates
+            const today = new Date().toISOString().split("T")[0];
+            checkInInput.min = today;
+            checkInInput.addEventListener("change", () => {
+                checkOutInput.min = checkInInput.value;
+                updatePrice();
+            });
+            checkOutInput.addEventListener("change", updatePrice);
+        }
+    </script>
+    <script src="/js/map.js"></script>

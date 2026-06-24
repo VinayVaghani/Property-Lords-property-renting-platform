@@ -1,0 +1,118 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+    <div id="filters">
+        <a class="filter-link" href="/listings<%= activeCategory === 'Trending' ? '' : '?category=Trending' %>">
+            <div class="filter <%= activeCategory === 'Trending' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-fire"></i></div>
+                <p>Trending</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Rooms' ? '' : '?category=Rooms' %>">
+            <div class="filter <%= activeCategory === 'Rooms' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-bed"></i></div>
+                <p>Rooms</p>
+            </div>
+        </a>
+        <a class="filter-link"
+            href="/listings<%= activeCategory === 'Iconic Cities' ? '' : '?category=Iconic Cities' %>">
+            <div class="filter <%= activeCategory === 'Iconic Cities' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-mountain-city"></i></div>
+                <p>Iconic Cities</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Mountains' ? '' : '?category=Mountains' %>">
+            <div class="filter <%= activeCategory === 'Mountains' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-mountain"></i></div>
+                <p>Mountains</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Castles' ? '' : '?category=Castles' %>">
+            <div class="filter <%= activeCategory === 'Castles' ? 'active-filter' : '' %>">
+                <div><i class="fa-brands fa-fort-awesome"></i></div>
+                <p>Castles</p>
+            </div>
+        </a>
+        <a class="filter-link"
+            href="/listings<%= activeCategory === 'Amazing Pools' ? '' : '?category=Amazing Pools' %>">
+            <div class="filter <%= activeCategory === 'Amazing Pools' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-person-swimming"></i></div>
+                <p>Amazing Pools</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Camping' ? '' : '?category=Camping' %>">
+            <div class="filter <%= activeCategory === 'Camping' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-tent"></i></div>
+                <p>Camping</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Farms' ? '' : '?category=Farms' %>">
+            <div class="filter <%= activeCategory === 'Farms' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-cow"></i></div>
+                <p>Farms</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Domes' ? '' : '?category=Domes' %>">
+            <div class="filter <%= activeCategory === 'Domes' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-igloo"></i></div>
+                <p>Domes</p>
+            </div>
+        </a>
+        <a class="filter-link" href="/listings<%= activeCategory === 'Boats' ? '' : '?category=Boats' %>">
+            <div class="filter <%= activeCategory === 'Boats' ? 'active-filter' : '' %>">
+                <div><i class="fa-solid fa-sailboat"></i></div>
+                <p>Boats</p>
+            </div>
+        </a>
+
+        <div class="tax-toggle" id="taxToggle">
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+                <label class="form-check-label" for="switchCheckDefault">Display Taxes</label>
+            </div>
+        </div>
+    </div>
+
+    <% if(allListing.length === 0) { %>
+        <div class="empty-state mt-5">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <h5>No listings found</h5>
+            <p class="text-secondary">Try a different search or category filter.</p>
+            <a href="/listings" class="btn btn-search mt-2">View All</a>
+        </div>
+    <% } else { %>
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mt-1" id="listingsGrid">
+            <% for(let li of allListing){ %>
+                <div class="col">
+                    <a href="/listings/<%= li._id %>" class="listing-link">
+                        <div class="card listing-card">
+                            <img src="<%=li.image.url%>" class="card-img-top" alt="<%= li.title %>"
+                                loading="lazy">
+                            <div class="card-img-overlay"></div>
+                            <div class="card-body">
+                                <p class="card-text">
+                                    <b><%= li.title %></b> <br>
+                                    &#8377; <%= li.price.toLocaleString('en-IN') %> / night
+                                        <i class="tax-info"> &nbsp; +18% GST</i>
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+
+    <script>
+        let taxSwitch = document.getElementById("switchCheckDefault");
+        taxSwitch.addEventListener("click", () => {
+            let taxInfo = document.getElementsByClassName("tax-info");
+            for (let info of taxInfo) {
+                if (info.style.display != "inline") {
+                    info.style.display = "inline";
+                }
+                else {
+                    info.style.display = "none";
+                }
+            }
+        });
+    </script>

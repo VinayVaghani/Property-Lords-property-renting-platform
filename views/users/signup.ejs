@@ -1,0 +1,37 @@
+<% layout("/layouts/boilerplate.ejs") %>
+    <div class="row mt-5 px-2 justify-content-center">
+        <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="auth-card">
+                <div class="auth-card-header">
+                    <h3 class="fw-bold text-white mb-0">Create Account</h3>
+                    <p class="text-secondary mb-0">Join Property Lords today</p>
+                </div>
+                <form action="/signup" method="POST" class="needs-validation" novalidate id="signupForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input name="username" id="username" type="text" class="form-control"
+                            placeholder="Choose a username" required>
+                        <div class="invalid-feedback">Username is required</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input name="email" id="email" type="email" class="form-control"
+                            placeholder="your@email.com" required>
+                        <div class="invalid-feedback">Please enter a valid email</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input name="password" id="password" type="password" class="form-control"
+                            placeholder="Create a strong password" required>
+                        <div class="invalid-feedback">Password is required</div>
+                    </div>
+
+                    <button id="signupBtn" class="btn btn-search w-100 mt-2">Sign Up</button>
+                </form>
+                <p class="text-center text-secondary mt-3 mb-0 small">Already have an account? <a href="/login"
+                        class="text-decoration-none" style="color: var(--accent);">Log in</a></p>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-md sticky-top" id="mainNav">
+  <div class="container-fluid px-md-4">
+
+    <a class="navbar-brand" href="/listings" id="navBrand">
+      <i class="fa-regular fa-compass"></i>
+      <span class="d-none d-sm-inline" style="font-weight: 800; font-size: 1.4rem; letter-spacing: -0.5px;">Property
+        Lords</span>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+      aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link text-white ms-md-3" href="/listings" id="navExplore"><i
+            class="fa-solid fa-house-user me-1"></i> Explore</a>
+      </div>
+
+      <div class="navbar-nav ms-auto my-2 my-md-0">
+        <form class="d-flex flex-column flex-sm-row gap-2" role="search" action="/listings" method="GET"
+          id="searchForm">
+          <input name="search" class="form-control search-bar" type="search" placeholder="Search Destinations"
+            aria-label="Search" value="<%= searchTerm %>" id="searchInput" />
+          <button class="btn btn-search" type="submit" id="searchBtn"><i
+              class="fa-solid fa-magnifying-glass me-1"></i>Search</button>
+        </form>
+      </div>
+
+      <div class="navbar-nav ms-auto align-items-start align-items-md-center gap-1 gap-md-2 mt-2 mt-md-0">
+        <a class="nav-link text-white-50" href="/listings/new" id="navAddProperty">Add property</a>
+        <% if(!currUser) { %>
+          <a class="nav-link text-white" href="/signup" id="navSignup"><b>Sign up</b></a>
+          <a class="nav-link text-white" href="/login" id="navLogin"><b>Log in</b></a>
+          <% } else { %>
+            <a class="nav-link text-white" href="/bookings" id="navBookings"><b>My Bookings</b></a>
+            <a class="nav-link text-white" href="/logout" id="navLogout"><b>Log out</b></a>
+            <% } %>
+      </div>
+    </div>
+  </div>
+</nav>

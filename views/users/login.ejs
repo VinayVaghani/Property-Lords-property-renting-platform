@@ -1,0 +1,31 @@
+<% layout("/layouts/boilerplate.ejs") %>
+    <div class="row mt-5 px-2 justify-content-center">
+        <div class="col-11 col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <div class="auth-card">
+                <div class="auth-card-header">
+                    
+                    <h3 class="fw-bold text-white mb-0"> Welcome Back</h3>
+                    <p class="text-secondary mb-0">Log in to your Property Lords account</p>
+                </div>
+                <form action="/login" method="POST" class="needs-validation" novalidate id="loginForm">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input name="username" id="username" type="text" class="form-control"
+                            placeholder="Enter your username" required>
+                        <div class="invalid-feedback">Please enter your username</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input name="password" id="password" type="password" class="form-control"
+                            placeholder="Enter your password" required>
+                        <div class="invalid-feedback">Please enter your password</div>
+                    </div>
+
+                    <button id="loginBtn" class="btn btn-search w-100 mt-2">Log In</button>
+                </form>
+                <p class="text-center text-secondary mt-3 mb-0 small">Don't have an account? <a href="/signup"
+                        class="text-decoration-none" style="color: var(--accent);">Sign up</a></p>
+            </div>
+        </div>
+    </div>
